@@ -1,0 +1,145 @@
+#Вводятся К целых чисел. Составьте все возможные списки из этих чисел.
+import itertools
+from tkinter import *
+import tkinter as tk
+
+def combinations():
+    global txt, txtn, number, lab, b
+
+    def close_all_windows():
+        root.destroy()
+
+    def dismiss(win_t):
+        win_t.grab_release()
+        win_t.destroy()
+
+    s_n = number.get()
+    k = s_n
+    if len(s_n) == 0:
+        win = Toplevel(root, relief=SUNKEN)
+        win.geometry("400x100+730+420")
+        win.title("Ошибка")
+        win.minsize(width=550, height=120)
+        win.maxsize(width=550, height=120)
+        win.protocol("WM_DELETE_WINDOW", lambda: dismiss(win))
+        Label(win, text='Вы ничего не ввели, \n введите одно или несколько целых простых чисел', font=("Brass Mono", 14, 'bold')).place(x=30, y=10)
+        close_button = Button(win, text="Повторить ввод", command=lambda: dismiss(win))
+        close_button.place(x=230, y=70)
+        win.grab_set()
+    c=0
+    z = 0
+    l = 0
+    v=0
+    e = []
+    a = []
+    s = 0
+    if c == 0:
+        a = k.split()
+        b = len(a)
+        for i in a:
+            try:
+                f = int(i)
+                if type(f) == int:
+                    z += 1
+                if z == len(a):
+                    c += 1
+            except ValueError:
+                a = []
+                win = Toplevel(root, relief=SUNKEN)
+                win.geometry("400x100+730+420")
+                win.title("Ошибка")
+                win.minsize(width=620, height=150)
+                win.maxsize(width=620, height=150)
+                win.protocol("WM_DELETE_WINDOW", lambda: dismiss(win))
+                Label(win, text='Вы ввели одно или несколько не целых не простых чисел,\n или же ввели один или несколько других символов,\n вводите только целые простые числа',
+                      font=("Brass Mono", 14, 'bold')).place(x=30, y=10)
+                close_button = Button(win, text="Повторить ввод", command=lambda: dismiss(win))
+                close_button.place(x=250, y=100)
+                win.grab_set()
+                break
+
+        while l != b:
+            a = k.split()
+            for i in a:
+                d = a.index(i)
+                for x in range(2, int(i) // 2 + 1):
+                    if (int(i) % x != 0):
+                        a = a
+                    else:
+                        if len(a) == 0:
+                            break
+                        e = a.pop(d)
+                        break
+            if len(a)!=0:
+                l+=1
+            else:
+                a = []
+                win = Toplevel(root, relief=SUNKEN)
+                win.geometry("400x100+730+420")
+                win.title("Ошибка")
+                win.minsize(width=350, height=100)
+                win.maxsize(width=350, height=100)
+                win.protocol("WM_DELETE_WINDOW", lambda: dismiss(win))
+                Label(win,
+                      text='В списке нет простых чисел,\n поэтому и комбинаций нет',
+                      font=("Brass Mono", 14, 'bold')).place(x=30, y=10)
+                close_button = Button(win, text="Повторить ввод", command=lambda: dismiss(win))
+                close_button.place(x=120, y=60)
+                win.grab_set()
+                v+=1
+                break
+    b = len(a)
+    if a == []:
+        b = len(e)
+        a = k
+    n = b
+    count = 1
+    m = 0
+    while n != 0:
+        count = count * n
+        n -= 1
+    while count != m:
+        for i in a:
+            s += int(i)
+        m += 1
+    s = s / (count * b)
+    com_set = itertools.permutations(a)
+
+
+    if v==0:
+        res = Toplevel(root, relief=SUNKEN)
+        res.geometry("400x100+550+420")
+        res.title("Ошибка")
+        listbox = tk.Listbox(res, selectmode=tk.MULTIPLE, relief=SUNKEN)
+        listbox.pack()
+        for item in com_set:
+            listbox.insert(tk.END, item)
+        res.minsize(width=700, height=300)
+        res.maxsize(width=700, height=300)
+        res.protocol("WM_DELETE_WINDOW", lambda: dismiss(res))
+        Label(res,
+              text=f'  Сумма всех чисел из всех комбинаций,\n поделённая на количество чисел из всех всех комбинаций: {str(s)} \n Результат\n ',
+              font=("Brass Mono", 14, 'bold')).place(x=30, y=10)
+        scrollbar = tk.Scrollbar(res)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        scrollbar.config(command=listbox.yview)
+        close_button = Button(res, text="Завершить", command=close_all_windows)
+        close_button1 = Button(res, text="Повторить ввод", command=lambda: dismiss(res))
+        close_button.place(x=150, y=90)
+        close_button1.place(x=150, y=120)
+        listbox.place(x=290, y=100)
+        res.grab_set()
+
+
+root = tk.Tk()
+root.geometry("400x200+500+250")
+s_n = 'name'
+txt = Label(root, text='Введите целые простые числа,\n разделенные пробелами', font=("Arial", 14, 'bold'))
+txtn = Label(root, text="Поле для ввода =>", font=("Brass Mono", 14))
+number = Entry(root, width=16, bd=3, textvariable=s_n)
+close_but = Button(root, text="Ввод", font=("Arial", 12, 'bold'), command=combinations)
+txt.place(x=50, y=20)
+txtn.place(x=50, y=80)
+number.place(x=250, y=80)
+close_but.place(x=155, y=130)
+mainloop()
